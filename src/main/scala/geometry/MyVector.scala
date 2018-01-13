@@ -5,7 +5,7 @@ package geometry
   */
 
 case class MyVector(from: Point, to: Point) {
-  private val EPS = 0.001
+  private val EPS = 0.1
 
   lazy val line: Line = Line(
     from.y - to.y,
@@ -23,7 +23,7 @@ case class MyVector(from: Point, to: Point) {
   def x: Double = to.x - from.x
   def y: Double = to.y - from.y
 
-  def length2 = math.pow(x, 2) + math.pow(y, 2)
+  def length2: Double = math.pow(x, 2) + math.pow(y, 2)
 
   def containsAsRectangle(point: Point): Boolean = {
     val left = math.min(from.x, to.x)

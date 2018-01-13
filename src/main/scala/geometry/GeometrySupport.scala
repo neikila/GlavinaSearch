@@ -30,8 +30,7 @@ trait GeometrySupport {
 
       if (D == 0) None
       else Some(Point(Dx / D, Dy / D))
-        .filter(p =>
-          anotherVector.containsAsRectangle(p) && vector.containsAsRectangle(p))
+        .filter(p => anotherVector.containsAsRectangle(p) && vector.containsAsRectangle(p))
     }
 
     def isCrossedBy(anotherVector: MyVector): Boolean = {
@@ -40,12 +39,14 @@ trait GeometrySupport {
   }
 
   implicit class FigureLineInterception(val figure: Figure) {
-    private val EPS_ACCURACY_CROSS_DETECTION_AT_BOUND: Double = 0.001
+    private val EPS_ACCURACY_CROSS_DETECTION_AT_BOUND: Double = 0.1
 
     def findCrossings(vector: MyVector): Iterable[Point] = {
-      val v1 = figure.vertex.filter(p => vector.contains(p) &&
-        vector.containsAsRectangle(p) &&
-        checkPoint(p, vector))
+      val v1 = figure.vertex.filter(p =>
+        vector.contains(p) &&
+          vector.containsAsRectangle(p) &&
+          checkPoint(p, vector))
+
       val v2 = figure.lines.flatMap(line =>
         line.findCrossing(vector) match {
           case optP: Some[Point] => optP.filter(checkPoint(_, vector))
