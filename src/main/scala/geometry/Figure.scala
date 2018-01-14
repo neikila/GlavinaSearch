@@ -3,7 +3,7 @@ package geometry
 /**
   * Created by k.neyman on 20.11.2017. 
   */
-case class Figure(lines: List[MyVector], vertex: List[Point]) extends GeometrySupport {
+case class Figure(lines: List[MyVector], vertices: List[Point]) extends GeometrySupport {
   def this(lines: List[MyVector]) = this(lines.map(_.nonBounded), lines.map(_.from))
 
   case class PointNeighbors(left: MyVector, right: MyVector)
@@ -19,11 +19,11 @@ case class Figure(lines: List[MyVector], vertex: List[Point]) extends GeometrySu
   private lazy val maxX = xs.max
 
   def containsPoint(p: Point): Boolean = {
-    if (p.x > maxX || vertex.contains(p)) false
+    if (p.x > maxX || vertices.contains(p)) false
     else {
       implicit val checkVector = MyVector(p, p.copy(x = maxX + 1))
       val lineCross = lines.toStream.count(_.isCrossedBy(checkVector))
-      val vertexCross = vertex.count(isInnerCross)
+      val vertexCross = vertices.count(isInnerCross)
       (lineCross + vertexCross) % 2 == 1
     }
   }
@@ -39,7 +39,7 @@ case class Figure(lines: List[MyVector], vertex: List[Point]) extends GeometrySu
 }
 
 object Figure {
-  def fromVertex(points: List[Point]): Figure = Figure(
+  def fromVertices(points: List[Point]): Figure = Figure(
     (points zip (points.drop(1) :+ points.head)).map { case (a, b) => MyVector(a, b).nonBounded },
     points)
 }

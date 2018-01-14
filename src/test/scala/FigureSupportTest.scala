@@ -7,10 +7,10 @@ import scala.language.postfixOps
 
 
 @RunWith(classOf[JUnitRunner])
-class FigureSupport extends FunSuite with GeometrySupport {
+class FigureSupportTest extends FunSuite with GeometrySupport {
   private def createRhombus: Figure = {
     val points = Point(0, 5) :: Point(7.5, 10) :: Point(15, 5) :: Point(7.5, 0) :: Nil
-    Figure.fromVertex(points)
+    Figure.fromVertices(points)
   }
 
   test("testContains") {
@@ -26,28 +26,14 @@ class FigureSupport extends FunSuite with GeometrySupport {
   }
 
   test("testNotContainsHorizontal") {
-    assert(createRhombus.vertex.forall(p => !createRhombus.containsPoint(p)))
-  }
-
-  test("Crossed By Vector") {
-    val box: Figure = Figure.fromVertex(Point(2, 2) :: Point(2, 4) :: Point(4, 4) :: Point(4, 2) :: Nil)
-
-    assert(box.findCrossings(MyVector(Point(3, 3), Point(2, 3))) == Point(2, 3) :: Nil)
-    assert(box.findCrossings(MyVector(Point(2, 3), Point(3, 3))) == Point(2, 3) :: Nil)
-    assert(box.findCrossings(MyVector(Point(1, 3), Point(2, 3))) == Nil)
-    assert(box.findCrossings(MyVector(Point(2, 3), Point(1, 3))) == Nil)
-
-    assert(box.findCrossings(MyVector(Point(2, 2), Point(3, 3))) == Point(2, 2) :: Nil)
-    assert(box.findCrossings(MyVector(Point(3, 3), Point(2, 2))) == Point(2, 2) :: Nil)
-    assert(box.findCrossings(MyVector(Point(1, 1), Point(2, 2))) == Nil)
-    assert(box.findCrossings(MyVector(Point(2, 2), Point(1, 1))) == Nil)
+    assert(createRhombus.vertices.forall(p => !createRhombus.containsPoint(p)))
   }
 
   test("testCrossedByVector2") {
     val root = Point(11, 6)
     val finish = Point(14, 9)
 
-    val figure = Figure.fromVertex(Point(7, 6) :: Point(7, 8) :: Point(13, 8) :: Point(13, 4) :: Point(11, 4) :: Point(11, 6) :: Nil)
+    val figure = Figure.fromVertices(Point(7, 6) :: Point(7, 8) :: Point(13, 8) :: Point(13, 4) :: Point(11, 4) :: Point(11, 6) :: Nil)
     val vector: MyVector = MyVector(root, finish)
     //      println(barrier2.findCrossings(vector))
 

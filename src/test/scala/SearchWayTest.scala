@@ -34,7 +34,7 @@ class SearchWayTest extends FunSuite with GeometrySupport {
   }
 
   test("testSimpleWay") {
-    val barrier = Figure.fromVertex(Point(2, 2) :: Point(2, 5) :: Point(6, 5) :: Point(6, 2) :: Nil)
+    val barrier = Figure.fromVertices(Point(2, 2) :: Point(2, 5) :: Point(6, 5) :: Point(6, 2) :: Nil)
 
     val result: Result = new Algo(Field(100, 100), barrier :: Nil, Point(3, 1), Point(6, 7)).solve()
     val ideal = List(
@@ -46,7 +46,7 @@ class SearchWayTest extends FunSuite with GeometrySupport {
   }
 
   test("testSimpleWay2") {
-    val barrier = Figure.fromVertex(Point(2, 2) :: Point(2, 5) :: Point(6, 5) :: Point(6, 2) :: Nil)
+    val barrier = Figure.fromVertices(Point(2, 2) :: Point(2, 5) :: Point(6, 5) :: Point(6, 2) :: Nil)
 
     val result: Result = new Algo(Field(100, 100), barrier :: Nil, Point(3, 1), Point(9, 4)).solve()
     val ideal = List(
@@ -58,7 +58,7 @@ class SearchWayTest extends FunSuite with GeometrySupport {
   }
 
   test("testSimpleWayBadNums") {
-    val barrier = Figure.fromVertex(Point(2, 2) :: Point(2, 5) :: Point(6, 5) :: Point(6, 2) :: Nil)
+    val barrier = Figure.fromVertices(Point(2, 2) :: Point(2, 5) :: Point(6, 5) :: Point(6, 2) :: Nil)
 
     val result: Result = new Algo(Field(100, 100), barrier :: Nil, Point(3, 1), Point(7, 4)).solve()
     val ideal = makePath(List(Point(3, 1), Point(4 + (1.0 / 3), 2), Point(6, 2), Point(6, 4), Point(7, 4)))
@@ -70,8 +70,8 @@ class SearchWayTest extends FunSuite with GeometrySupport {
     val root = Point(2, 1)
     val finish = Point(14, 9)
 
-    val barrier1 = Figure.fromVertex(Point(3, 2) :: Point(3, 5) :: Point(8, 5) :: Point(8, 2) :: Nil)
-    val barrier2 = Figure.fromVertex(Point(7, 6) :: Point(7, 8) :: Point(13, 8) :: Point(13, 4) :: Point(11, 4) :: Point(11, 6) :: Nil)
+    val barrier1 = Figure.fromVertices(Point(3, 2) :: Point(3, 5) :: Point(8, 5) :: Point(8, 2) :: Nil)
+    val barrier2 = Figure.fromVertices(Point(7, 6) :: Point(7, 8) :: Point(13, 8) :: Point(13, 4) :: Point(11, 4) :: Point(11, 6) :: Nil)
 
     val result: Result = new Algo(Field(100, 100), barrier1 :: barrier2 :: Nil, root, finish).solve()
     val ideal =  makePath(List(root, Point(3.5, 2), Point(8, 2), Point(8, 5), Point(9.5, 6), Point(11, 6)))

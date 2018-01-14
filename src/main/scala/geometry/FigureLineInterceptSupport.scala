@@ -23,7 +23,7 @@ trait FigureLineInterceptSupport extends LineCrossSupport {
     }
 
     def findCrossingWithVertex(vector: MyVector): List[Point] = {
-      figure.vertex.filter(p =>
+      figure.vertices.filter(p =>
         vector.contains(p) &&
           vector.containsAsRectangle(p) &&
           checkPoint(p, vector))

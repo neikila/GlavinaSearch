@@ -73,7 +73,7 @@ trait MoveAlongSupport {
     }
 
     private def getInitEdge(from: Point): MyVector = {
-      if (figure.vertex.contains(from)) {
+      if (figure.vertices.contains(from)) {
         figure.vertexToLines(from).right
       } else {
         figure.lines.find(vector => vector.containsAsRectangle(from) && vector.contains(from))
