@@ -36,26 +36,7 @@ case class MyVector(from: Point, to: Point) {
       bottom - EPS <= point.y && point.y <= top + EPS
   }
 
-  def halfContainer: MyVector = new HalfMyVector(from, to)
   def nonBounded: MyVector = new NotBoundedMyVector(from, to)
-}
-
-class HalfMyVector(from: Point, to: Point) extends MyVector(from, to) {
-  override def contains(p: Point): Boolean = {
-    if (p == to) {
-      false
-    } else {
-      super.contains(p)
-    }
-  }
-
-  override def containsAsRectangle(point: Point): Boolean = {
-    if (point.x == to.x || point.y == to.y) {
-      false
-    } else {
-      super.containsAsRectangle(point)
-    }
-  }
 }
 
 class NotBoundedMyVector(from: Point, to: Point) extends MyVector(from, to) {

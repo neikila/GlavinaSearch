@@ -34,11 +34,7 @@ class CrossTests extends FunSuite with GeometrySupport {
     assert(result)
   }
 
-  test("testHalfBounds") {
-    assert(!geometry.MyVector(Point(0, 0), Point(10, 10)).halfContainer.isCrossedBy(geometry.MyVector(Point(10, 0), Point(10, 10))))
-  }
-
   test("testContainsPoint") {
-    assert(geometry.MyVector(Point(0, 0), Point(10, 10)).halfContainer.contains(Point(1.378, 1.379)))
+    assert(geometry.MyVector(Point(0, 0), Point(10, 10)).contains(Point(1.378, 1.379)))
   }
 }
