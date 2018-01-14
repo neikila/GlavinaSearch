@@ -1,12 +1,16 @@
 import Algo.Result
+import geometry.Point.PointAccuracyEqual
 import geometry.support.GeometrySupport
+import geometry.task.AccuracySettings
 import geometry.{Figure, MyVector, Point}
 
 /**
-  * Created by k.neyman on 20.11.2017. 
+  * Created by k.neyman on 20.11.2017.
   */
 class Algo(val field: Field, val barriers: List[Figure], val globalFrom: Point, val globalTo: Point)
   extends GeometrySupport {
+
+  private implicit val accuracySettings: AccuracySettings = new AccuracySettings
 
   val EPS_INTERCEPTION_DIFFERENCE = 0.01
 
@@ -43,6 +47,7 @@ class Algo(val field: Field, val barriers: List[Figure], val globalFrom: Point, 
     def distToStart(point: Point): Double = distance2(v.from, point)
 
     val interceptions: Stream[Interception] = barriers.toStream.flatMap { b =>
+
       val iterable: Iterable[Point] = b.findCrossings(v)
       if (iterable.isEmpty) None
       else Some(Interception(v, b, iterable.minBy(distToStart)))

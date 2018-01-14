@@ -1,5 +1,6 @@
 import geometry._
 import geometry.support.GeometrySupport
+import geometry.task.AccuracySettings
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
@@ -9,6 +10,8 @@ import scala.language.postfixOps
 
 @RunWith(classOf[JUnitRunner])
 class BoxTests extends FunSuite with GeometrySupport {
+  private implicit val accuracySettings: AccuracySettings = new AccuracySettings
+
   private val box: Figure = Figure.fromVertices(Point(2, 2) :: Point(2, 4) :: Point(4, 4) :: Point(4, 2) :: Nil)
 
   private val center = Point(3, 3)

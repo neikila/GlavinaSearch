@@ -34,7 +34,15 @@ class CrossTests extends FunSuite with GeometrySupport {
     assert(result)
   }
 
-  test("testContainsPoint") {
+  test("contains point nearby") {
     assert(geometry.MyVector(Point(0, 0), Point(10, 10)).contains(Point(1.378, 1.379)))
+  }
+
+  test("test contains nearby outside vertex") {
+    assert(geometry.MyVector(Point(0, 0), Point(10, 10)).contains(Point(10.001, 10.001)))
+  }
+
+  test("test nonbound doesnt contain nearby outside vertex") {
+    assert(!geometry.MyVector(Point(0, 0), Point(10, 10)).nonBounded.contains(Point(10.001, 10.001)))
   }
 }

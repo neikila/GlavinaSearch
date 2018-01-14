@@ -1,57 +1,51 @@
 package geometry
 
+import geometry.support.ParametrizedLineSupport
+
 /**
   * Created by k.neyman on 20.11.2017. 
   */
 
-case class MyVector(from: Point, to: Point) {
+case class MyVector(from: Point, to: Point) extends ParametrizedLineSupport {
   private val EPS = 0.1
+  private val EPS2 = EPS * EPS
 
+  // Attributes
   lazy val line: Line = Line(
     from.y - to.y,
     to.x - from.x,
     from.x * to.y - to.x * from.y
   )
 
-  def contains(p: Point): Boolean = {
-    val l1 = MyVector(from, p)
-    val l2 = MyVector(p, to)
-
-    math.abs(l1.x * l2.y - l1.y * l2.x) < EPS
-  }
-
   def x: Double = to.x - from.x
   def y: Double = to.y - from.y
 
   def length2: Double = math.pow(x, 2) + math.pow(y, 2)
 
-  def containsAsRectangle(point: Point): Boolean = {
-    val left = math.min(from.x, to.x)
-    val right = math.max(from.x, to.x)
-
-    val top = math.max(from.y, to.y)
-    val bottom = math.min(from.y, to.y)
-
-    left - EPS <= point.x && point.x <= right + EPS &&
-      bottom - EPS <= point.y && point.y <= top + EPS
+  // Geometric checks
+  def contains(p: Point): Boolean = {
+    isVertex(p) || containsInside(p)
   }
 
+  protected def isVertex(p: Point): Boolean = {
+    MyVector(from, p).length2 < EPS2 || MyVector(to, p).length2 < EPS2
+  }
+
+  protected def containsInside(p: Point): Boolean = {
+    val param: TParam = this.findProjectionT(p)
+    param > 0 && param < 1 && MyVector(parametrized(param), p).length2 < EPS2
+  }
+
+  // Math operations
+  def *(myVector: MyVector): Double = asRadiusPoint * myVector.asRadiusPoint
+
+  // Transformations
   def nonBounded: MyVector = new NotBoundedMyVector(from, to)
+  def asRadiusPoint: Point = Point(x, y)
+  def parametrized: ParametrizedLine = new ParametrizedLine(this)
 }
 
 class NotBoundedMyVector(from: Point, to: Point) extends MyVector(from, to) {
-
-  override def contains(p: Point): Boolean = {
-    if (p == from || p == to) false
-    else super.contains(p)
-  }
-
-  override def containsAsRectangle(point: Point): Boolean = {
-    if (point == from || point == to) {
-      false
-    } else {
-      super.containsAsRectangle(point)
-    }
-  }
+  override def contains(p: Point): Boolean = containsInside(p)
 }
 

@@ -77,7 +77,7 @@ trait MoveAlongSupport {
       if (figure.vertices.contains(from)) {
         figure.vertexToLines(from).right
       } else {
-        figure.lines.find(vector => vector.containsAsRectangle(from) && vector.contains(from))
+        figure.lines.find(vector => vector.contains(from))
           .getOrElse(throw new IllegalArgumentException("Point not on edge of figure"))
       }
     }
