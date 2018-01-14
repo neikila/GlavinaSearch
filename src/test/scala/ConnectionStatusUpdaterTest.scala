@@ -1,6 +1,5 @@
 import geometry._
-import geometry.support.GeometrySupport
-import geometry.task.{AccuracySettings, ConnectionStatusUpdater, Node}
+import geometry.task.{ConnectionStatusUpdater, Node}
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
@@ -11,10 +10,6 @@ import scala.language.postfixOps
 @RunWith(classOf[JUnitRunner])
 class ConnectionStatusUpdaterTest extends FunSuite {
 
-//  test("1") {
-//    assert(1 == 1)
-//  }
-
   test("Connect start with finish") {
     val root = Node.root(Point(0, 0))
     val finish = Node.finish(Point(10, 10))
@@ -22,10 +17,11 @@ class ConnectionStatusUpdaterTest extends FunSuite {
     root.addNeighbor(finish, Nil)
     finish.addNeighbor(root, Nil)
 
-    new ConnectionStatusUpdater(root, finish).update()
+    val result = new ConnectionStatusUpdater(root, finish).update()
 
     assert(root.isConnectedToFinish && root.isConnectedToStart)
     assert(finish.isConnectedToFinish && finish.isConnectedToStart)
+    assert(result)
   }
 
   test("Connect start with middle") {
@@ -35,9 +31,10 @@ class ConnectionStatusUpdaterTest extends FunSuite {
     root.addNeighbor(mid, Nil)
     mid.addNeighbor(root, Nil)
 
-    new ConnectionStatusUpdater(root, mid).update()
+    val result = new ConnectionStatusUpdater(root, mid).update()
 
     assert(!mid.isConnectedToFinish && mid.isConnectedToStart)
+    assert(!result)
   }
 
   test("Connect two chains") {
@@ -58,7 +55,7 @@ class ConnectionStatusUpdaterTest extends FunSuite {
     connect(beforeFinish1, beforeFinish2)
 
     connect(afterRoot2, beforeFinish2)
-    new ConnectionStatusUpdater(afterRoot2, beforeFinish2).update()
+    val result = new ConnectionStatusUpdater(afterRoot2, beforeFinish2).update()
 
     assert(root.isConnectedToFinish && root.isConnectedToStart)
     assert(afterRoot1.isConnectedToFinish && afterRoot1.isConnectedToStart)
@@ -67,6 +64,8 @@ class ConnectionStatusUpdaterTest extends FunSuite {
     assert(finish.isConnectedToFinish && finish.isConnectedToStart)
     assert(beforeFinish1.isConnectedToFinish && beforeFinish1.isConnectedToStart)
     assert(beforeFinish2.isConnectedToFinish && beforeFinish2.isConnectedToStart)
+
+    assert(result)
   }
 
   private def connect(node1: Node, node2: Node) = {
