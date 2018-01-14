@@ -1,5 +1,4 @@
 import Algo.Result
-import geometry.Point.PointAccuracyEqual
 import geometry.support.GeometrySupport
 import geometry.task.AccuracySettings
 import geometry.{Figure, MyVector, Point}
@@ -12,8 +11,6 @@ class Algo(val field: Field, val barriers: List[Figure], val globalFrom: Point, 
 
   private implicit val accuracySettings: AccuracySettings = new AccuracySettings
 
-  val EPS_INTERCEPTION_DIFFERENCE = 0.01
-
   var extraPoints: List[Point] = Nil
 
   def solve(): Result = {
@@ -23,43 +20,44 @@ class Algo(val field: Field, val barriers: List[Figure], val globalFrom: Point, 
   def getToClosestToTarget(from: Point, to: Point): Result = {
     val straightLineToFinish = MyVector(from, to)
     findInterception(straightLineToFinish) match {
-      case Some(interception) if MyVector(interception.interceptionPoint, from).length2 < EPS_INTERCEPTION_DIFFERENCE =>
-        Nil
+      case Some(interception) if isDeadEnd(straightLineToFinish.from, interception) => Nil
       case Some(interception) =>
         val toBarrier = MyVector(straightLineToFinish.from, interception.interceptionPoint)
-
-        def distanceToEnd(p: Point): Double = distance2(p, straightLineToFinish.to)
-        val movedAround = interception.barrier.moveAlongToTarget(interception.interceptionPoint, distanceToEnd)
-        val allPath = toBarrier :: movedAround
-
-        val closest: Point = allPath.last.to
-
-        if (closest == straightLineToFinish.to) allPath
-        else allPath ::: getToClosestToTarget(closest, to)
-
+        toBarrier :: moveAroundBarrier(straightLineToFinish, interception)
       case _ => straightLineToFinish :: Nil
     }
   }
 
-  private case class Interception(interceptedPath: MyVector, barrier: Figure, interceptionPoint: Point)
+  private def moveAroundBarrier(straightLineToFinish: MyVector, interception: Interception) = {
+    def distanceToEnd(p: Point): Double = MyVector(p, straightLineToFinish.to).length2
+
+    val movedAround = interception.barrier.moveAlongToTarget(interception.interceptionPoint, distanceToEnd)
+    val closest: Point = lastPoint(movedAround)
+
+    if (closest.isApproximatelyEqual(straightLineToFinish.to)(accuracySettings.POINT_ACCURACY_EQUAL)) movedAround
+    else movedAround ::: getToClosestToTarget(closest, straightLineToFinish.to)
+  }
+
+  private def isDeadEnd(from: Point, interception: Interception): Boolean = {
+    MyVector(interception.interceptionPoint, from).length2 < accuracySettings.POINT_ACCURACY_EQUAL
+  }
 
   private def findInterception(v: MyVector): Option[Interception] = {
-    def distToStart(point: Point): Double = distance2(v.from, point)
+    def distToStart(point: Point): Double = MyVector(v.from, point).length2
 
-    val interceptions: Stream[Interception] = barriers.toStream.flatMap { b =>
-
+    barriers.toStream.flatMap { b =>
       val iterable: Iterable[Point] = b.findCrossings(v)
       if (iterable.isEmpty) None
       else Some(Interception(v, b, iterable.minBy(distToStart)))
+    } match {
+      case Stream.Empty => None
+      case interceptions => Some(interceptions.minBy { case Interception(_, _, p) => distToStart(p) })
     }
-
-    if (interceptions.isEmpty) None
-    else Some(interceptions.minBy { case Interception(_, _, p) => distToStart(p) })
   }
 
-  private def distance2(p1: Point, p2: Point): Double = {
-    math.pow(p1.x - p2.x, 2) + math.pow(p1.y - p2.y, 2)
-  }
+  private def lastPoint(result: Result): Point = result.last.to
+
+  private case class Interception(interceptedPath: MyVector, barrier: Figure, interceptionPoint: Point)
 }
 
 object Algo {

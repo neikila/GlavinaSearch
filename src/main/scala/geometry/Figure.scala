@@ -7,7 +7,7 @@ import geometry.task.AccuracySettings
   * Created by k.neyman on 20.11.2017. 
   */
 case class Figure(lines: List[MyVector], vertices: List[Point]) extends LineCrossSupport {
-  private implicit val accuracy: MyVectorAccuracy.ContainsAccuracy = new AccuracySettings().EPS2
+  private implicit val accuracy: MyVectorAccuracy.ContainsAccuracy = new AccuracySettings().VECTOR_CONTAIN_ACCURACY
 
   def this(lines: List[MyVector]) = this(lines.map(_.nonBounded), lines.map(_.from))
 

@@ -10,7 +10,7 @@ import scala.language.postfixOps
 
 @RunWith(classOf[JUnitRunner])
 class CrossTests extends FunSuite with GeometrySupport {
-  implicit val accuracy: MyVectorAccuracy.ContainsAccuracy = new AccuracySettings().EPS2
+  implicit val accuracy: MyVectorAccuracy.ContainsAccuracy = new AccuracySettings().VECTOR_CONTAIN_ACCURACY
   test("testCrossing") {
     assert(geometry.MyVector(Point(0, 0), Point(10, 10)).isCrossedBy(geometry.MyVector(Point(0, 10), Point(10, 0))))
   }

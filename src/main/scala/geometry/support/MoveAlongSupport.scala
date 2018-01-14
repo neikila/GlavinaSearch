@@ -8,7 +8,7 @@ import optimum.OptimumParametrisedSearch
   * Created by Neikila on 14.01.2018.
   */
 trait MoveAlongSupport {
-  private implicit val accuracy: MyVectorAccuracy.ContainsAccuracy = new AccuracySettings().EPS2
+  private implicit val accuracy: MyVectorAccuracy.ContainsAccuracy = new AccuracySettings().VECTOR_CONTAIN_ACCURACY
 
   type OptFun = Point => Double
   implicit class MoveAlongFigure(val figure: Figure) {
