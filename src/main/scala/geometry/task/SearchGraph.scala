@@ -16,6 +16,10 @@ class SearchGraph(startPoint: Point, endPoint: Point, accuracySettings: Accuracy
 
   var hasFoundWay = false
 
+  def getSubTargets: List[Point] = {
+    subTargets.map(_.point)
+  }
+
   def connect(target: Point, achievedFrom: Point, path: List[MyVector]): Unit = {
     val fromNode = findNode(achievedFrom)
 
@@ -31,10 +35,6 @@ class SearchGraph(startPoint: Point, endPoint: Point, accuracySettings: Accuracy
     hasFoundWay |= new ConnectionStatusUpdater(fromNode, nodeToConnect).update()
   }
 
-  def getSubTargets: List[Point] = {
-    subTargets.map(_.point)
-  }
-
   private def findNode(point: Point): Node = {
     (startNode :: endNode :: subTargets)
       .find(_.point.isApproximatelyEqual(point))
@@ -47,9 +47,8 @@ class SearchGraph(startPoint: Point, endPoint: Point, accuracySettings: Accuracy
   }
 
   private def reversePath(path: List[MyVector]): List[MyVector] = {
-    path
+    path.reverse.map { case MyVector(from, to) => MyVector(to, from) }
   }
-
 }
 
 
