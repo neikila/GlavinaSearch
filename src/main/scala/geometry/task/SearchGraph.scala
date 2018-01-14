@@ -16,42 +16,23 @@ class SearchGraph(startPoint: Point, endPoint: Point, accuracySettings: Accuracy
 
   var connectionNode: Option[Node] = None
   def hasFoundWay: Boolean = connectionNode.isDefined
-  def getPath: List[MyVector] = {
+  def getPath: List[MyVector] = new ResultPathBuilder().getPath
 
-    var lastNode: Option[Node] = connectionNode
-    var pathToFinish: List[Node] = Nil
-    do {
-      pathToFinish = lastNode.get :: pathToFinish
-      lastNode = lastNode.get.parentToFinish
-    } while (lastNode.isDefined)
+  def getSubTargets: List[Point] = subTargets.map(_.point)
+  def getStartSubTargets: List[Point] = subTargets.filter(_.parentToStart.isDefined).map(_.point)
+  def getFinishSubTargets: List[Point] = subTargets.filter(_.parentToFinish.isDefined).map(_.point)
 
-    lastNode = connectionNode.get.parentToStart
-    var pathToStart: List[Node] = Nil
-    do {
-      pathToStart = lastNode.get :: pathToStart
-      lastNode = lastNode.get.parentToStart
-    } while (lastNode.isDefined)
+  def isStartTree(point: Point): Boolean = findNode(point).isConnectedToStart
 
-    val path = pathToStart ::: pathToFinish.reverse
-    println("Path")
-    println(path.mkString("\n"))
-    println()
-    (path zip path.drop(1)).flatMap { case (left, right) => left.neighbours.find(_.nodeNeighbor == right).get.pathToNeighbor }
-  }
-
-  def getSubTargets: List[Point] = {
-    subTargets.map(_.point)
-  }
-
-  def connect(target: Point, achievedFrom: Point, path: List[MyVector]): Unit = {
+  def connect(target: Point, achievedFrom: Point, path: List[MyVector]): (Node, Boolean) = {
     val fromNode = findNode(achievedFrom)
 
-    val nodeToConnect = subTargets.find(_.point.isApproximatelyEqual(target)) match {
-      case Some(p) => p
+    val (nodeToConnect, isNew) = findNodeOpt(target) match {
+      case Some(p) => (p, false)
       case None =>
         val newNode = new Node(target)
         subTargets = newNode :: subTargets
-        newNode
+        (newNode, true)
     }
 
     connect(fromNode, nodeToConnect, path)
@@ -60,12 +41,16 @@ class SearchGraph(startPoint: Point, endPoint: Point, accuracySettings: Accuracy
     if (new ConnectionStatusUpdater(fromNode, nodeToConnect).update() && !hasFoundWay) {
       connectionNode = Some(nodeToConnect)
     }
+    (nodeToConnect, isNew)
   }
 
   private def findNode(point: Point): Node = {
+    findNodeOpt(point).getOrElse(throw new IllegalArgumentException(s"No node near $point"))
+  }
+
+  private def findNodeOpt(point: Point): Option[Node] = {
     (startNode :: endNode :: subTargets)
       .find(_.point.isApproximatelyEqual(point))
-      .getOrElse(throw new IllegalArgumentException(s"No node near $point"))
   }
 
   private def connect(node1: Node, node2: Node, pathFrom1To2: List[MyVector]): Unit = {
@@ -75,6 +60,33 @@ class SearchGraph(startPoint: Point, endPoint: Point, accuracySettings: Accuracy
 
   private def reversePath(path: List[MyVector]): List[MyVector] = {
     path.reverse.map { case MyVector(from, to) => MyVector(to, from) }
+  }
+
+  private class ResultPathBuilder {
+    def getPath: List[MyVector] = {
+      val path = buildPathToStart ::: buildPathToFinish.reverse
+      (path zip path.drop(1)).flatMap { case (left, right) => left.neighbours.find(_.nodeNeighbor == right).get.pathToNeighbor }
+    }
+
+    private def buildPathToStart = {
+      var lastNode = connectionNode.get.parentToStart
+      var pathToStart: List[Node] = Nil
+      do {
+        pathToStart = lastNode.get :: pathToStart
+        lastNode = lastNode.get.parentToStart
+      } while (lastNode.isDefined)
+      pathToStart
+    }
+
+    private def buildPathToFinish = {
+      var lastNode: Option[Node] = connectionNode
+      var pathToFinish: List[Node] = Nil
+      do {
+        pathToFinish = lastNode.get :: pathToFinish
+        lastNode = lastNode.get.parentToFinish
+      } while (lastNode.isDefined)
+      pathToFinish
+    }
   }
 }
 

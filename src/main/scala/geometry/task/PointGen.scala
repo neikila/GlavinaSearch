@@ -13,3 +13,16 @@ class PointGen(val field: Field) {
     Point(widthGen.generate, heightGen.generate)
   }
 }
+
+class StubPointGen(field: Field) extends PointGen(field) {
+  private var counter = -1
+  private val points = (Point(2, 6) :: Point(2, 10) :: Nil).toArray
+
+  override def generate: Point = {
+    counter += 1
+    if (counter == points.length) {
+      counter -= 1
+    }
+    points(counter)
+  }
+}

@@ -43,7 +43,8 @@ class SearchWayTest extends FunSuite with GeometrySupport {
       MyVector(Point(3.5, 2), Point(6, 2)),
       MyVector(Point(6, 2), Point(6, 5)),
       MyVector(Point(6, 5), Point(6, 7)))
-    assert(comparePath(result, ideal), s"result: $result \n ideal: $ideal")
+
+    assertResult(result, ideal)
   }
 
   test("Simple way around box, Finish Move along at Middle of line") {
@@ -55,7 +56,8 @@ class SearchWayTest extends FunSuite with GeometrySupport {
       MyVector(Point(5, 2), Point(6, 2)),
       MyVector(Point(6, 2), Point(6, 4)),
       MyVector(Point(6, 4), Point(9, 4)))
-    assert(comparePath(result, ideal), s"result: $result \n ideal: $ideal")
+
+    assertResult(result, ideal)
   }
 
   test("Simple way uncomfortable nums") {
@@ -64,8 +66,7 @@ class SearchWayTest extends FunSuite with GeometrySupport {
     val result: Result = new Algo(Field(100, 100), barrier :: Nil, Point(3, 1), Point(7, 4)).solve()
     val ideal = makePath(List(Point(3, 1), Point(4 + (1.0 / 3), 2), Point(6, 2), Point(6, 4), Point(7, 4)))
 
-    println(toPoints(result))
-    assert(comparePath(result, ideal), s"result: $result \n ideal: $ideal")
+    assertResult(result, ideal)
   }
 
   test("Search box and L-figure with dead end") {
@@ -76,9 +77,11 @@ class SearchWayTest extends FunSuite with GeometrySupport {
     val barrier2 = Figure.fromVertices(Point(7, 6) :: Point(7, 8) :: Point(13, 8) :: Point(13, 4) :: Point(11, 4) :: Point(11, 6) :: Nil)
 
     val result: Result = new Algo(Field(100, 100), barrier1 :: barrier2 :: Nil, root, finish).solve()
-    val ideal =  makePath(List(root, Point(3.5, 2), Point(8, 2), Point(8, 5), Point(9.5, 6), Point(11, 6)))
+    val ideal = makePath(List(root, Point(3.5, 2), Point(8, 2), Point(8, 5), Point(9.5, 6), Point(11, 6)))
+    assertResult(result, ideal)
+  }
 
-    println(toPoints(result))
-    assert(comparePath(result, ideal), s"\nresult: $result \n ideal: $ideal")
+  def assertResult(actual: List[MyVector], ideal: List[MyVector]): Unit = {
+    assert(comparePath(actual, ideal), s"\nresult: $actual \n ideal: $ideal")
   }
 }
