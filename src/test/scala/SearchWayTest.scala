@@ -1,5 +1,5 @@
-import Algo.Result
 import geometry.support.GeometrySupport
+import geometry.task.{Algo, Field}
 import geometry.{Figure, MyVector, Point}
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
@@ -10,7 +10,7 @@ import scala.language.postfixOps
 
 @RunWith(classOf[JUnitRunner])
 class SearchWayTest extends FunSuite with GeometrySupport {
-
+  import Algo.Result
   implicit val accuracy: EPS = 0.1
 
   private def makePath(points: List[Point]): List[MyVector] = {
