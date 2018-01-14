@@ -11,6 +11,7 @@ import geometry.task.AccuracySettings
 trait FigureInterceptSupport extends LineCrossSupport {
   implicit class FigureLineInterception(val figure: Figure)(implicit val accuracySettings: AccuracySettings) {
     private implicit val pointAccuracyEqual: PointAccuracyEqual = accuracySettings.POINT_ACCURACY_EQUAL
+    private val EPS2: MyVectorAccuracy.ContainsAccuracy = accuracySettings.EPS2
 
     def findCrossings(vector: MyVector): Iterable[Point] = {
       (findCrossingWithVertex(vector) ::: findCrossingsWithLines(vector)).distinct
@@ -28,7 +29,7 @@ trait FigureInterceptSupport extends LineCrossSupport {
     }
 
     def findCrossingWithVertex(vector: MyVector): List[Point] = {
-      figure.vertices.filter(p => vector.contains(p) && checkPointForBoundaryCondtions(p, vector))
+      figure.vertices.filter(p => vector.contains(p)(EPS2) && checkPointForBoundaryCondtions(p, vector))
     }
 
     private def checkPointForBoundaryCondtions(p: Point, vector: MyVector): Boolean = {

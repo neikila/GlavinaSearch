@@ -1,5 +1,6 @@
 package geometry.task
 
+import geometry.MyVectorAccuracy
 import geometry.Point.PointAccuracyEqual
 import geometry.support.FigureInterceptAccuracy.BoundaryPointDetectionAccuracy
 
@@ -9,5 +10,8 @@ import geometry.support.FigureInterceptAccuracy.BoundaryPointDetectionAccuracy
 class AccuracySettings {
   val POINT_ACCURACY_EQUAL: PointAccuracyEqual = 0.1
   val EPS_ACCURACY_CROSS_DETECTION_AT_BOUND: BoundaryPointDetectionAccuracy = 0.1
+
+  private val EPS = 0.1
+  val EPS2: MyVectorAccuracy.ContainsAccuracy = EPS * EPS
 }
 

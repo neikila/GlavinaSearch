@@ -34,7 +34,7 @@ class SearchWayTest extends FunSuite with GeometrySupport {
     }
   }
 
-  test("testSimpleWay") {
+  test("Simple way around box") {
     val barrier = Figure.fromVertices(Point(2, 2) :: Point(2, 5) :: Point(6, 5) :: Point(6, 2) :: Nil)
 
     val result: Result = new Algo(Field(100, 100), barrier :: Nil, Point(3, 1), Point(6, 7)).solve()
@@ -46,7 +46,7 @@ class SearchWayTest extends FunSuite with GeometrySupport {
     assert(comparePath(result, ideal), s"result: $result \n ideal: $ideal")
   }
 
-  test("testSimpleWay2") {
+  test("Simple way around box, Finish Move along at Middle of line") {
     val barrier = Figure.fromVertices(Point(2, 2) :: Point(2, 5) :: Point(6, 5) :: Point(6, 2) :: Nil)
 
     val result: Result = new Algo(Field(100, 100), barrier :: Nil, Point(3, 1), Point(9, 4)).solve()
@@ -58,16 +58,17 @@ class SearchWayTest extends FunSuite with GeometrySupport {
     assert(comparePath(result, ideal), s"result: $result \n ideal: $ideal")
   }
 
-  test("testSimpleWayBadNums") {
+  test("Simple way uncomfortable nums") {
     val barrier = Figure.fromVertices(Point(2, 2) :: Point(2, 5) :: Point(6, 5) :: Point(6, 2) :: Nil)
 
     val result: Result = new Algo(Field(100, 100), barrier :: Nil, Point(3, 1), Point(7, 4)).solve()
     val ideal = makePath(List(Point(3, 1), Point(4 + (1.0 / 3), 2), Point(6, 2), Point(6, 4), Point(7, 4)))
+
     println(toPoints(result))
     assert(comparePath(result, ideal), s"result: $result \n ideal: $ideal")
   }
 
-  test("testSearchWithDeadEnd") {
+  test("Search box and L-figure with dead end") {
     val root = Point(2, 1)
     val finish = Point(14, 9)
 
@@ -78,6 +79,6 @@ class SearchWayTest extends FunSuite with GeometrySupport {
     val ideal =  makePath(List(root, Point(3.5, 2), Point(8, 2), Point(8, 5), Point(9.5, 6), Point(11, 6)))
 
     println(toPoints(result))
-    assert(comparePath(result, ideal), s"result: $result \n ideal: $ideal")
+    assert(comparePath(result, ideal), s"\nresult: $result \n ideal: $ideal")
   }
 }

@@ -1,12 +1,15 @@
 package geometry.support
 
-import geometry.{Figure, MyVector, ParametrizedLine, Point}
+import geometry._
+import geometry.task.AccuracySettings
 import optimum.OptimumParametrisedSearch
 
 /**
   * Created by Neikila on 14.01.2018.
   */
 trait MoveAlongSupport {
+  private implicit val accuracy: MyVectorAccuracy.ContainsAccuracy = new AccuracySettings().EPS2
+
   type OptFun = Point => Double
   implicit class MoveAlongFigure(val figure: Figure) {
     def moveAlongToTarget(from: Point, optimim: OptFun): List[MyVector] = {

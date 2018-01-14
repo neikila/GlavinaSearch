@@ -7,8 +7,6 @@ import geometry.support.ParametrizedLineSupport
   */
 
 case class MyVector(from: Point, to: Point) extends ParametrizedLineSupport {
-  private val EPS = 0.1
-  private val EPS2 = EPS * EPS
 
   // Attributes
   lazy val line: Line = Line(
@@ -23,17 +21,17 @@ case class MyVector(from: Point, to: Point) extends ParametrizedLineSupport {
   def length2: Double = math.pow(x, 2) + math.pow(y, 2)
 
   // Geometric checks
-  def contains(p: Point): Boolean = {
+  def contains(p: Point)(implicit accuracy: MyVectorAccuracy.ContainsAccuracy): Boolean = {
     isVertex(p) || containsInside(p)
   }
 
-  protected def isVertex(p: Point): Boolean = {
-    MyVector(from, p).length2 < EPS2 || MyVector(to, p).length2 < EPS2
+  protected def isVertex(p: Point)(implicit accuracy: MyVectorAccuracy.ContainsAccuracy): Boolean = {
+    MyVector(from, p).length2 < accuracy || MyVector(to, p).length2 < accuracy
   }
 
-  protected def containsInside(p: Point): Boolean = {
+  protected def containsInside(p: Point)(implicit accuracy: MyVectorAccuracy.ContainsAccuracy): Boolean = {
     val param: TParam = this.findProjectionT(p)
-    param > 0 && param < 1 && MyVector(parametrized(param), p).length2 < EPS2
+    param > 0 && param < 1 && MyVector(parametrized(param), p).length2 < accuracy
   }
 
   // Math operations
@@ -46,6 +44,9 @@ case class MyVector(from: Point, to: Point) extends ParametrizedLineSupport {
 }
 
 class NotBoundedMyVector(from: Point, to: Point) extends MyVector(from, to) {
-  override def contains(p: Point): Boolean = containsInside(p)
+  override def contains(p: Point)(implicit accuracy: MyVectorAccuracy.ContainsAccuracy): Boolean = containsInside(p)
 }
 
+object MyVectorAccuracy {
+  type ContainsAccuracy = Double
+}

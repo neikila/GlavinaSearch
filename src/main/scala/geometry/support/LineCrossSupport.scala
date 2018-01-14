@@ -1,6 +1,6 @@
 package geometry.support
 
-import geometry.{Line, MyVector, Point}
+import geometry.{Line, MyVector, MyVectorAccuracy, Point}
 
 /**
   * Created by Neikila on 14.01.2018.
@@ -30,7 +30,7 @@ trait LineCrossSupport {
     }
   }
 
-  implicit class VectorCrossDetector(val vector: MyVector) {
+  implicit class VectorCrossDetector(val vector: MyVector)(implicit val accuracy: MyVectorAccuracy.ContainsAccuracy) {
     private def hasSamePoint(anotherVector: MyVector): Boolean = {
       vector.from == anotherVector.from ||
         vector.from == anotherVector.to ||

@@ -1,11 +1,14 @@
 package geometry
 
-import geometry.support.GeometrySupport
+import geometry.support.{GeometrySupport, LineCrossSupport}
+import geometry.task.AccuracySettings
 
 /**
   * Created by k.neyman on 20.11.2017. 
   */
-case class Figure(lines: List[MyVector], vertices: List[Point]) extends GeometrySupport {
+case class Figure(lines: List[MyVector], vertices: List[Point]) extends LineCrossSupport {
+  private implicit val accuracy: MyVectorAccuracy.ContainsAccuracy = new AccuracySettings().EPS2
+
   def this(lines: List[MyVector]) = this(lines.map(_.nonBounded), lines.map(_.from))
 
   case class PointNeighbors(left: MyVector, right: MyVector)
