@@ -1,5 +1,6 @@
 import Algo.Result
-import geometry.{Figure, GeometrySupport, MyVector, Point}
+import geometry.support.GeometrySupport
+import geometry.{Figure, MyVector, Point}
 
 /**
   * Created by k.neyman on 20.11.2017. 

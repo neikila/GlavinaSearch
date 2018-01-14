@@ -1,5 +1,6 @@
 import Algo.Result
-import geometry.{Figure, GeometrySupport, MyVector, Point}
+import geometry.support.GeometrySupport
+import geometry.{Figure, MyVector, Point}
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner

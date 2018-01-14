@@ -1,4 +1,4 @@
-import geometry.GeometrySupport
+import geometry.support.GeometrySupport
 
 /**
   * Created by k.neyman on 17.11.2017. 

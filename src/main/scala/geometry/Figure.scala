@@ -1,5 +1,7 @@
 package geometry
 
+import geometry.support.GeometrySupport
+
 /**
   * Created by k.neyman on 20.11.2017. 
   */

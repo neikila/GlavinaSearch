@@ -1,4 +1,5 @@
 import geometry._
+import geometry.support.GeometrySupport
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner

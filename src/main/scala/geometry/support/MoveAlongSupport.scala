@@ -1,5 +1,6 @@
-package geometry
+package geometry.support
 
+import geometry.{Figure, MyVector, ParametrizedLine, Point}
 import optimum.OptimumParametrisedSearch
 
 /**

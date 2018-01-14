@@ -1,4 +1,6 @@
-package geometry
+package geometry.support
+
+import geometry.{MyVector, Point}
 
 /**
   * Created by Neikila on 14.01.2018.

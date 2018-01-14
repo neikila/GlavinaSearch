@@ -1,4 +1,5 @@
-import geometry.{GeometrySupport, MyVector, ParametrizedLine, Point}
+import geometry.support.GeometrySupport
+import geometry.{MyVector, ParametrizedLine, Point}
 import optimum.OptimumParametrisedSearch
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
