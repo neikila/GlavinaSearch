@@ -8,13 +8,15 @@ import geometry.task.AccuracySettings
 /**
   * Created by Neikila on 14.01.2018.
   */
-trait FigureInterceptSupport extends LineCrossSupport {
+trait FigureInterceptSupport extends LineCrossSupport with ParametrizedLineSupport {
   implicit class FigureLineInterception(val figure: Figure)(implicit val accuracySettings: AccuracySettings) {
     private implicit val pointAccuracyEqual: PointAccuracyEqual = accuracySettings.POINT_ACCURACY_EQUAL
     private val eps2: MyVectorAccuracy.ContainsAccuracy = accuracySettings.VECTOR_CONTAIN_ACCURACY
 
     def findCrossings(vector: MyVector): Iterable[Point] = {
-      (findCrossingWithVertex(vector) ::: findCrossingsWithLines(vector)).distinct
+      val withLines = findCrossingsWithLines(vector)
+      val withVertex = findCrossingWithVertex(vector)
+      withVertex ::: withLines
     }
 
     def findCrossingsWithLines(vector: MyVector): List[Point] = {
@@ -22,7 +24,7 @@ trait FigureInterceptSupport extends LineCrossSupport {
     }
 
     private def findCrossingWithLine(vector: MyVector, line: MyVector): Option[Point] = {
-      line.findCrossing(vector) match {
+      line.findCrossing(vector).map { p => line.findProjection(p) } match {
         case optP: Some[Point] => optP.filter(checkPointForBoundaryCondtions(_, vector))
         case _ => None
       }
@@ -39,7 +41,7 @@ trait FigureInterceptSupport extends LineCrossSupport {
     }
 
     private def isCrossingFromOutside(vector: MyVector): Boolean = {
-      figure.containsPoint(new ParametrizedLine(vector).apply(accuracySettings.EPS_ACCURACY_CROSS_DETECTION_AT_BOUND))
+      figure.containsPoint(new ParametrizedLine(vector).apply(accuracySettings.EPS_ACCURACY_CROSS_DETECTION_AT_BOUND / vector.length))
     }
 
     private def isCrossingFromInside(vector: MyVector): Boolean = {

@@ -16,7 +16,7 @@ class PointGen(val field: Field) {
 
 class StubPointGen(field: Field) extends PointGen(field) {
   private var counter = -1
-  private val points = (Point(2, 6) :: Point(2, 10) :: Nil).toArray
+  private val points = (Point(68.83935584307345,40.010119672246816) :: Nil).toArray
 
   override def generate: Point = {
     counter += 1

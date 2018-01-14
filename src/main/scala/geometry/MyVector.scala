@@ -19,6 +19,7 @@ case class MyVector(from: Point, to: Point) extends ParametrizedLineSupport {
   def y: Double = to.y - from.y
 
   def length2: Double = math.pow(x, 2) + math.pow(y, 2)
+  def length: Double = math.sqrt(math.pow(x, 2) + math.pow(y, 2))
 
   // Geometric checks
   def contains(p: Point)(implicit accuracy: MyVectorAccuracy.ContainsAccuracy): Boolean = {
@@ -44,7 +45,9 @@ case class MyVector(from: Point, to: Point) extends ParametrizedLineSupport {
 }
 
 class NotBoundedMyVector(from: Point, to: Point) extends MyVector(from, to) {
-  override def contains(p: Point)(implicit accuracy: MyVectorAccuracy.ContainsAccuracy): Boolean = containsInside(p)
+  override def contains(p: Point)(implicit accuracy: MyVectorAccuracy.ContainsAccuracy): Boolean = {
+    !isVertex(p) && containsInside(p)
+  }
 }
 
 object MyVectorAccuracy {

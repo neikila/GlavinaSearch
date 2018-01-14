@@ -9,7 +9,7 @@ import geometry.support.FigureInterceptAccuracy.BoundaryPointDetectionAccuracy
   */
 class AccuracySettings {
   val POINT_ACCURACY_EQUAL: PointAccuracyEqual = 0.01
-  val EPS_ACCURACY_CROSS_DETECTION_AT_BOUND: BoundaryPointDetectionAccuracy = 0.1
+  val EPS_ACCURACY_CROSS_DETECTION_AT_BOUND: BoundaryPointDetectionAccuracy = 0.2
 
   private val EPS = 0.1
   val VECTOR_CONTAIN_ACCURACY: MyVectorAccuracy.ContainsAccuracy = EPS * EPS

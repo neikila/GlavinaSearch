@@ -12,7 +12,7 @@ class Algo(val field: Field, val barriers: List[Figure], val globalFrom: Point, 
 
   private implicit val accuracySettings: AccuracySettings = new AccuracySettings
 
-  private val pointGen = new StubPointGen(field)
+  private val pointGen = new PointGen(field)
   private val searchGraph = new SearchGraph(globalFrom, globalTo, accuracySettings)
 
   def solve(): Result = {
@@ -74,10 +74,10 @@ class Algo(val field: Field, val barriers: List[Figure], val globalFrom: Point, 
       val (node, isNewNode) = searchGraph.connect(point, from, path)
       if (isNewNode) {
         println(s"New node $node")
-        println(s"path = $path")
+        println(s"path = $path\n")
         Some(node, path)
       } else {
-        println(s"Old node $node")
+        println(s"Old node $node\n")
         None
       }
     } else {
@@ -138,8 +138,9 @@ class Algo(val field: Field, val barriers: List[Figure], val globalFrom: Point, 
 
   private def lastPoint(result: Result): Point = result.last.to
 
-  private case class Interception(interceptedPath: MyVector, barrier: Figure, interceptionPoint: Point)
 }
+
+case class Interception(interceptedPath: MyVector, barrier: Figure, interceptionPoint: Point)
 
 object Algo {
   type Result = List[MyVector]

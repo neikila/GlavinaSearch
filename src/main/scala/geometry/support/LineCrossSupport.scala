@@ -42,9 +42,10 @@ trait LineCrossSupport {
       if (vector == anotherVector) {
         println(s"Vectors are equals $vector, $anotherVector")
         None
+      } else {
+        new LineCrossDetector(vector.line).findCrossing(anotherVector.line)
+          .filter(p => anotherVector.contains(p) && vector.contains(p))
       }
-      new LineCrossDetector(vector.line).findCrossing(anotherVector.line)
-        .filter(p => anotherVector.contains(p) && vector.contains(p))
     }
 
     def isCrossedBy(anotherVector: MyVector): Boolean = {
