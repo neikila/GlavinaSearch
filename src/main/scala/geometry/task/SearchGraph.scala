@@ -14,7 +14,30 @@ class SearchGraph(startPoint: Point, endPoint: Point, accuracySettings: Accuracy
 
   private var subTargets: List[Node] = Nil
 
-  var hasFoundWay = false
+  var connectionNode: Option[Node] = None
+  def hasFoundWay: Boolean = connectionNode.isDefined
+  def getPath: List[MyVector] = {
+
+    var lastNode: Option[Node] = connectionNode
+    var pathToFinish: List[Node] = Nil
+    do {
+      pathToFinish = lastNode.get :: pathToFinish
+      lastNode = lastNode.get.parentToFinish
+    } while (lastNode.isDefined)
+
+    lastNode = connectionNode.get.parentToStart
+    var pathToStart: List[Node] = Nil
+    do {
+      pathToStart = lastNode.get :: pathToStart
+      lastNode = lastNode.get.parentToStart
+    } while (lastNode.isDefined)
+
+    val path = pathToStart ::: pathToFinish.reverse
+    println("Path")
+    println(path.mkString("\n"))
+    println()
+    (path zip path.drop(1)).flatMap { case (left, right) => left.neighbours.find(_.nodeNeighbor == right).get.pathToNeighbor }
+  }
 
   def getSubTargets: List[Point] = {
     subTargets.map(_.point)
@@ -32,7 +55,11 @@ class SearchGraph(startPoint: Point, endPoint: Point, accuracySettings: Accuracy
     }
 
     connect(fromNode, nodeToConnect, path)
-    hasFoundWay |= new ConnectionStatusUpdater(fromNode, nodeToConnect).update()
+    if (fromNode.isConnectedToStart) nodeToConnect.parentToStart = fromNode
+    if (fromNode.isConnectedToFinish) nodeToConnect.parentToFinish = fromNode
+    if (new ConnectionStatusUpdater(fromNode, nodeToConnect).update() && !hasFoundWay) {
+      connectionNode = Some(nodeToConnect)
+    }
   }
 
   private def findNode(point: Point): Node = {
