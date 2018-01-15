@@ -23,15 +23,7 @@ class SearchWayTest extends FunSuite with GeometrySupport {
   private def comparePath(actual: Result, ideal: Result)(implicit rangeToPoint: EPS): Boolean = {
     val range2 = math.pow(rangeToPoint, 2)
     def inRange(p1: Point, p2: Point): Boolean = MyVector(p1, p2).length2 < range2
-    if (actual.size == ideal.size) {
-      if (actual.isEmpty) true
-      else {
-        val zipped = toPoints(actual) zip toPoints(ideal)
-        zipped.forall { case (p1, p2) => inRange(p1, p2) }
-      }
-    } else {
-      false
-    }
+    actual.size == ideal.size && (toPoints(actual) zip toPoints(ideal)).forall { case (p1, p2) => inRange(p1, p2) }
   }
 
   test("Simple way around box") {
