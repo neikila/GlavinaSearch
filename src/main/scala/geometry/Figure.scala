@@ -1,7 +1,7 @@
 package geometry
 
 import geometry.support.{GeometrySupport, LineCrossSupport}
-import geometry.task.AccuracySettings
+import labtask.AccuracySettings
 
 /**
   * Created by k.neyman on 20.11.2017. 

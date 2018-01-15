@@ -1,7 +1,7 @@
 import geometry.{Figure, MyVector, Point}
 import geometry.support.GeometrySupport
-import geometry.task.{AccuracySettings, Algo, Field, Interception}
-import geometry.task.Algo.Result
+import labtask.{AccuracySettings, Algo, Field, Interception}
+import labtask.Algo.Result
 
 /**
   * Created by k.neyman on 17.11.2017. 

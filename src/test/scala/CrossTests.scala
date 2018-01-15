@@ -1,6 +1,6 @@
 import geometry.{MyVectorAccuracy, Point}
 import geometry.support.GeometrySupport
-import geometry.task.AccuracySettings
+import labtask.AccuracySettings
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner

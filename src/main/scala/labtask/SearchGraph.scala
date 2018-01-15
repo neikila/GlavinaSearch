@@ -1,4 +1,4 @@
-package geometry.task
+package labtask
 
 import geometry.{MyVector, Point}
 import geometry.Point.PointAccuracyEqual

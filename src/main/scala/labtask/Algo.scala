@@ -1,7 +1,7 @@
-package geometry.task
+package labtask
 
 import geometry.support.GeometrySupport
-import geometry.task.Algo.Result
+import labtask.Algo.Result
 import geometry.{Figure, MyVector, Point}
 
 /**

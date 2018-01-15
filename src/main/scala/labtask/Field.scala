@@ -1,4 +1,4 @@
-package geometry.task
+package labtask
 
 /**
   * Created by k.neyman on 20.11.2017. 

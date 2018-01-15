@@ -1,5 +1,5 @@
 import geometry.support.GeometrySupport
-import geometry.task.{Algo, Field}
+import labtask.{Algo, Field}
 import geometry.{Figure, MyVector, Point}
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite

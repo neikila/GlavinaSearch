@@ -2,7 +2,7 @@ package geometry.support
 
 import geometry.Point.PointAccuracyEqual
 import geometry._
-import geometry.task.AccuracySettings
+import labtask.AccuracySettings
 //import geometry.support.FigureInterceptSupport.BoundaryPointDetectionAccuracy
 
 /**

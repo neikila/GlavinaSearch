@@ -1,4 +1,4 @@
-package geometry.task
+package labtask
 
 import geometry.Point
 

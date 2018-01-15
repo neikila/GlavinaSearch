@@ -1,5 +1,5 @@
 import geometry._
-import geometry.task.{AccuracySettings, ConnectionStatusUpdater, Node, SearchGraph}
+import labtask.{AccuracySettings, ConnectionStatusUpdater, Node, SearchGraph}
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner

@@ -1,5 +1,5 @@
 import geometry._
-import geometry.task.{ConnectionStatusUpdater, Node}
+import labtask.{ConnectionStatusUpdater, Node}
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner

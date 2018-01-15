@@ -1,7 +1,7 @@
 package geometry.support
 
 import geometry._
-import geometry.task.AccuracySettings
+import labtask.AccuracySettings
 import optimum.OptimumParametrisedSearch
 
 /**
