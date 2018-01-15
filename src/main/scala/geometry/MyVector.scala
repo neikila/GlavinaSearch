@@ -22,6 +22,8 @@ case class MyVector(from: Point, to: Point) extends ParametrizedLineSupport {
   def length: Double = math.sqrt(math.pow(x, 2) + math.pow(y, 2))
 
   // Geometric checks
+  def isZeroVector: Boolean = from == to
+
   def contains(p: Point)(implicit accuracy: MyVectorAccuracy.ContainsAccuracy): Boolean = {
     isVertex(p) || containsInside(p)
   }
@@ -42,6 +44,8 @@ case class MyVector(from: Point, to: Point) extends ParametrizedLineSupport {
   def nonBounded: MyVector = new NotBoundedMyVector(from, to)
   def asRadiusPoint: Point = Point(x, y)
   def parametrized: ParametrizedLine = new ParametrizedLine(this)
+  def splitBy(point: Point): (MyVector, MyVector) = (MyVector(from, point), MyVector(point, to))
+  def reverse: MyVector = MyVector(to, from)
 }
 
 class NotBoundedMyVector(from: Point, to: Point) extends MyVector(from, to) {

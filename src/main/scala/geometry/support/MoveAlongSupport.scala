@@ -12,14 +12,23 @@ trait MoveAlongSupport {
 
   type OptFun = Point => Double
   implicit class MoveAlongFigure(val figure: Figure) {
-    def moveAlongToTarget(from: Point, optimim: OptFun): List[MyVector] = {
+    def moveAlongToTarget(from: Point, optimim: OptFun, otherBarriers: List[Figure]): List[MyVector] = {
       val edge = getInitEdge(from)
+      val (rightPart, leftPart) = edge.splitBy(from)
 
       val (left, (_ :: right)) = figure.lines.span(_ != edge)
       val circle = right ::: left
 
-      val minLeft = moveRound(from, edge :: circle, optimim, reversed = false)
-      val minRight = moveRound(from, edge :: circle.reverse, optimim, reversed = true)
+      val leftCircle =
+        if (leftPart.isZeroVector) circle
+        else leftPart :: circle
+
+      val rightCircle =
+        (if (rightPart.isZeroVector) circle
+        else rightPart :: circle.reverse).map(_.reverse)
+
+      val minLeft = moveRound(from, leftCircle, optimim)
+      val minRight = moveRound(from, rightCircle, optimim)
       selectMinPath(from, minLeft, minRight)(optimim)
     }
 
@@ -56,17 +65,15 @@ trait MoveAlongSupport {
       optimim(list.last.to)
     }
 
-    private def moveRound(from: Point, lines: List[MyVector], optimim: OptFun, reversed: Boolean): List[MyVector] = {
-      val tValToGoNext = if (reversed) 0 else 1
+    private def moveRound(from: Point, lines: List[MyVector], optimim: OptFun): List[MyVector] = {
       lines match {
         case head :: tail =>
           val paramLine = new ParametrizedLine(head)
           val tMin = moveAlongEdge(paramLine, optimim)
           val nextP = paramLine(tMin)
-          if (tMin == tValToGoNext)
-            MyVector(from, nextP) :: moveRound(nextP, tail, optimim, reversed)
-          else
-            MyVector(from, nextP) :: Nil
+
+          if (tMin == 1) MyVector(from, nextP) :: moveRound(nextP, tail, optimim)
+          else MyVector(from, nextP) :: Nil
         case Nil => Nil
       }
     }

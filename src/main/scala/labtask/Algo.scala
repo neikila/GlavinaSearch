@@ -87,7 +87,7 @@ class Algo(val field: Field, val barriers: List[Figure], val globalFrom: Point, 
 
   def getToClosestToTarget(from: Point, to: Point): Result = {
     val straightLineToFinish = MyVector(from, to)
-    findInterception(straightLineToFinish) match {
+    straightLineToFinish.findInterception(barriers) match {
       case Some(interception) if isDeadEnd(straightLineToFinish.from, interception) => Nil
       case Some(interception) =>
         val toBarrier = MyVector(straightLineToFinish.from, interception.interceptionPoint)
@@ -100,7 +100,7 @@ class Algo(val field: Field, val barriers: List[Figure], val globalFrom: Point, 
     def distanceToEnd(p: Point): Double = MyVector(p, straightLineToFinish.to).length2
 
     println(s"Vector = $straightLineToFinish interceptionPoint ${interception.interceptionPoint} ")
-    val movedAround = interception.barrier.moveAlongToTarget(interception.interceptionPoint, distanceToEnd)
+    val movedAround = interception.barrier.moveAlongToTarget(interception.interceptionPoint, distanceToEnd, barriers.filter(_ != interception.barrier))
     if (movedAround.nonEmpty) {
       val closest: Point = lastPoint(movedAround)
 
@@ -113,19 +113,6 @@ class Algo(val field: Field, val barriers: List[Figure], val globalFrom: Point, 
 
   private def isDeadEnd(from: Point, interception: Interception): Boolean = {
     MyVector(interception.interceptionPoint, from).length2 < accuracySettings.POINT_ACCURACY_EQUAL
-  }
-
-  private def findInterception(v: MyVector): Option[Interception] = {
-    def distToStart(point: Point): Double = MyVector(v.from, point).length2
-
-    barriers.toStream.flatMap { b =>
-      val iterable: Iterable[Point] = b.findCrossings(v)
-      if (iterable.isEmpty) None
-      else Some(Interception(v, b, iterable.minBy(distToStart)))
-    } match {
-      case Stream.Empty => None
-      case interceptions => Some(interceptions.minBy { case Interception(_, _, p) => distToStart(p) })
-    }
   }
 
   private def generatePoint: Point = {

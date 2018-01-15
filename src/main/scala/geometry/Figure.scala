@@ -1,6 +1,6 @@
 package geometry
 
-import geometry.support.{GeometrySupport, LineCrossSupport}
+import geometry.support.LineCrossSupport
 import labtask.AccuracySettings
 
 /**
@@ -40,6 +40,11 @@ case class Figure(lines: List[MyVector], vertices: List[Point]) extends LineCros
     } else {
       false
     }
+  }
+
+  override def equals(other: Any): Boolean = other match {
+    case that: Figure => vertices == that.vertices
+    case _ => false
   }
 }
 
