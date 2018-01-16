@@ -30,8 +30,8 @@ class FigureSupportTest extends FunSuite with GeometrySupport {
     assert(createRhombus.vertices.forall(p => !createRhombus.containsPoint(p)))
   }
 
-  private val barrier2 = Figure.fromVertices(Point(7, 6) :: Point(7, 8) :: Point(13, 8) :: Point(13, 4) :: Point(11, 4) :: Point(11, 6) :: Nil)
-  test("contains horizontal point") {
-    assert(!barrier2.containsPoint(Point(2, 6)))
-  }
+//  private val barrier2 = Figure.fromVertices(Point(7, 6) :: Point(7, 8) :: Point(13, 8) :: Point(13, 4) :: Point(11, 4) :: Point(11, 6) :: Nil)
+//  test("contains horizontal point") {
+//    assert(!barrier2.containsPoint(Point(2, 6)))
+//  }
 }

@@ -10,6 +10,10 @@ import geometry.{Figure, MyVector, Point}
 class Algo(val field: Field, val barriers: List[Figure], val globalFrom: Point, val globalTo: Point)
   extends GeometrySupport {
 
+  val depthLimit = 10
+  val generateLimit = 100
+  var generateCounter = 0
+
   private implicit val accuracySettings: AccuracySettings = new AccuracySettings
 
   private val pointGen = new PointGen(field)
@@ -20,7 +24,11 @@ class Algo(val field: Field, val barriers: List[Figure], val globalFrom: Point, 
     if (!searchGraph.hasFoundWay) {
       withRandomPoints()
     }
-    searchGraph.getPath
+    if (searchGraph.hasFoundWay) {
+      searchGraph.getPath
+    } else {
+      Nil
+    }
   }
 
   private def recursive(from: Point, to: Point): Unit = {
@@ -64,11 +72,11 @@ class Algo(val field: Field, val barriers: List[Figure], val globalFrom: Point, 
         println(s"From $t to $nextTarget")
         recursive(t, nextTarget)
       }
-    } while (!searchGraph.hasFoundWay)
+    } while (!searchGraph.hasFoundWay && generateCounter < generateLimit)
   }
 
   private def findPathAndAddSubTarget(from: Point, to: Point): Option[(Node, Result)] = {
-    val path = getToClosestToTarget(from, to)
+    val path = getToClosestToTarget(from, to, 0)
     if (path.nonEmpty) {
       val point = lastPoint(path)
       val (node, isNewNode) = searchGraph.connect(point, from, path)
@@ -85,18 +93,22 @@ class Algo(val field: Field, val barriers: List[Figure], val globalFrom: Point, 
     }
   }
 
-  def getToClosestToTarget(from: Point, to: Point): Result = {
+  def getToClosestToTarget(from: Point, to: Point, depth: Int): Result = {
     val straightLineToFinish = MyVector(from, to)
-    straightLineToFinish.findInterception(barriers) match {
-      case Some(interception) if isDeadEnd(straightLineToFinish.from, interception) => Nil
-      case Some(interception) =>
-        val toBarrier = MyVector(straightLineToFinish.from, interception.interceptionPoint)
-        toBarrier :: moveAroundBarrier(straightLineToFinish, interception)
-      case _ => straightLineToFinish :: Nil
+    if (depth < depthLimit) {
+      straightLineToFinish.findInterception(barriers) match {
+        case Some(interception) if isDeadEnd(straightLineToFinish.from, interception) => Nil
+        case Some(interception) =>
+          val toBarrier = MyVector(straightLineToFinish.from, interception.interceptionPoint)
+          toBarrier :: moveAroundBarrier(straightLineToFinish, interception, depth)
+        case _ => straightLineToFinish :: Nil
+      }
+    } else {
+      Nil
     }
   }
 
-  private def moveAroundBarrier(straightLineToFinish: MyVector, interception: Interception) = {
+  private def moveAroundBarrier(straightLineToFinish: MyVector, interception: Interception, depth: Int) = {
     def distanceToEnd(p: Point): Double = MyVector(p, straightLineToFinish.to).length2
 
     println(s"Vector = $straightLineToFinish interceptionPoint ${interception.interceptionPoint} ")
@@ -105,7 +117,7 @@ class Algo(val field: Field, val barriers: List[Figure], val globalFrom: Point, 
       val closest: Point = lastPoint(movedAround)
 
       if (closest.isApproximatelyEqual(straightLineToFinish.to)(accuracySettings.POINT_ACCURACY_EQUAL)) movedAround
-      else movedAround ::: getToClosestToTarget(closest, straightLineToFinish.to)
+      else movedAround ::: getToClosestToTarget(closest, straightLineToFinish.to, depth + 1)
     } else {
       Nil
     }
@@ -120,6 +132,8 @@ class Algo(val field: Field, val barriers: List[Figure], val globalFrom: Point, 
     while (barriers.exists(_.containsPoint(point))) {
       point = pointGen.generate
     }
+    generateCounter += 1
+    println(s"Generate counter = $generateCounter")
     point
   }
 

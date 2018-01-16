@@ -17,16 +17,23 @@ object Main extends GeometrySupport with TaskParser {
   implicit val accuracySettings: AccuracySettings = new AccuracySettings
 
   def main(args: Array[String]): Unit = {
+    val timer = new Timer
     val str = Source.fromFile("C:\\Users\\Neikila\\Documents\\study\\GlavinaSearch\\res\\source.json").getLines().mkString
     val task = Json.parse(str).as[Task]
 
     val field = Field(task.finish.x + 2, task.finish.y + 2)
     val barriers = task.polygons.map(fig => Figure.fromVertices(fig.vertices)) ::: createSideBarriers(field)
 
+    timer.tic()
     val result = toPoints(new Algo(field, barriers, task.start, task.finish).solve())
-
-    println(result)
-    printToFile(new Serializer(result).serialize)
+    timer.toc()
+    if (result.nonEmpty) {
+      println(s"result = $result")
+      printToFile(new Serializer(result).serialize)
+    } else {
+      println("Result not found")
+    }
+    println(f"Result time = ${timer.millis}%.4f millis")
   }
 
   private def createSideBarriers(field: Field): List[Figure] = {
@@ -49,6 +56,22 @@ object Main extends GeometrySupport with TaskParser {
   }
 
   private def toPoints(vectors: List[MyVector]): List[Point] = vectors.head.from :: vectors.map(_.to)
+}
+
+class Timer {
+  private var start: Long = 0
+  private var stop: Long = 0
+
+  def tic(): Unit = {
+    start = System.nanoTime()
+  }
+
+  def toc(): Unit = {
+    stop = System.nanoTime()
+  }
+
+  def delta: Long = stop - start
+  def millis: Double = (stop - start) / 10e6
 }
 
 
