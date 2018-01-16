@@ -39,12 +39,17 @@ trait LineCrossSupport {
     }
 
     def findCrossing(anotherVector: MyVector): Option[Point] = {
-      if (vector == anotherVector) {
-        println(s"Vectors are equals $vector, $anotherVector")
-        None
-      } else {
-        new LineCrossDetector(vector.line).findCrossing(anotherVector.line)
-          .filter(p => anotherVector.contains(p) && vector.contains(p))
+      try {
+        if (vector == anotherVector) {
+          println(s"Vectors are equals $vector, $anotherVector")
+          None
+        } else {
+          new LineCrossDetector(vector.line).findCrossing(anotherVector.line)
+            .filter(p => anotherVector.contains(p) && vector.contains(p))
+        }
+      } catch {
+        case _: IllegalArgumentException => None
+        case e => throw e
       }
     }
 

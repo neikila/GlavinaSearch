@@ -1,25 +1,40 @@
+import java.io.{BufferedWriter, File, FileWriter}
+
 import geometry.{Figure, MyVector, Point}
 import geometry.support.GeometrySupport
 import labtask.{AccuracySettings, Algo, Field, Interception}
 import labtask.Algo.Result
+import parser.{Task, TaskParser}
+import play.api.libs.json.Json
+import serialiser.Serializer
+
+import scala.io.Source
 
 /**
   * Created by k.neyman on 17.11.2017. 
   */
-object Main extends GeometrySupport {
+object Main extends GeometrySupport with TaskParser {
   implicit val accuracySettings: AccuracySettings = new AccuracySettings
 
   def main(args: Array[String]): Unit = {
-    val root = Point(2, 1)
-    val finish = Point(14, 9)
+    val str = Source.fromFile("C:\\Users\\Neikila\\Documents\\study\\GlavinaSearch\\res\\source.json").getLines().mkString
+    val task = Json.parse(str).as[Task]
+    val barriers = task.polygons.map(fig => Figure.fromVertices(fig.vertices))
 
-    val barrier1 = Figure.fromVertices(Point(3, 2) :: Point(3, 5) :: Point(8, 5) :: Point(8, 2) :: Nil)
-    val barrier2 = Figure.fromVertices(Point(7, 6) :: Point(7, 8) :: Point(13, 8) :: Point(13, 4) :: Point(11, 4) :: Point(11, 6) :: Nil)
+    val root = task.start
+    val finish = task.finish
+    val field = Field(task.finish.x + 2, task.finish.y + 2)
 
-//    println(findInterception(MyVector(Point(11.0, 4.2), Point(13.0, 4.2)), barrier2 :: Nil))
+    val result = toPoints(new Algo(field, barriers, root, finish).solve())
+    println(result)
+    printToFile(new Serializer(result).serialize)
+  }
 
-    val result: Result = new Algo(Field(15, 15), barrier1 :: barrier2 :: Nil, root, finish).solve()
-    println(toPoints(result))
+  def printToFile(result: String): Unit = {
+    val file = new File("C:\\Users\\Neikila\\Documents\\study\\GlavinaSearch\\res\\result.json")
+    val bw = new BufferedWriter(new FileWriter(file))
+    bw.write(result)
+    bw.close()
   }
 
   private def toPoints(vectors: List[MyVector]): List[Point] = vectors.head.from :: vectors.map(_.to)
