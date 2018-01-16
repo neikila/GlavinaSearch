@@ -19,15 +19,26 @@ object Main extends GeometrySupport with TaskParser {
   def main(args: Array[String]): Unit = {
     val str = Source.fromFile("C:\\Users\\Neikila\\Documents\\study\\GlavinaSearch\\res\\source.json").getLines().mkString
     val task = Json.parse(str).as[Task]
-    val barriers = task.polygons.map(fig => Figure.fromVertices(fig.vertices))
 
-    val root = task.start
-    val finish = task.finish
     val field = Field(task.finish.x + 2, task.finish.y + 2)
+    val barriers = task.polygons.map(fig => Figure.fromVertices(fig.vertices)) ::: createSideBarriers(field)
 
-    val result = toPoints(new Algo(field, barriers, root, finish).solve())
+    val result = toPoints(new Algo(field, barriers, task.start, task.finish).solve())
+
     println(result)
     printToFile(new Serializer(result).serialize)
+  }
+
+  private def createSideBarriers(field: Field): List[Figure] = {
+    val delta = 10
+    val zeroPoint = Point(0, 0)
+    val fieldPoint = Point(field.width, field.height)
+    List(
+      Figure.rect(zeroPoint, fieldPoint.copy(y = -delta)),
+      Figure.rect(fieldPoint, Point(0, fieldPoint.x + delta)),
+      Figure.rect(fieldPoint, Point(0, fieldPoint.y + delta)),
+      Figure.rect(zeroPoint, fieldPoint.copy(x = -delta))
+    )
   }
 
   def printToFile(result: String): Unit = {

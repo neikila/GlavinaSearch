@@ -52,4 +52,7 @@ object Figure {
   def fromVertices(points: List[Point]): Figure = Figure(
     (points zip (points.drop(1) :+ points.head)).map { case (a, b) => MyVector(a, b).nonBounded },
     points)
+
+  def rect(point1: Point, point2: Point): Figure =
+    Figure.fromVertices(List(point1, point1.copy(y = point2.y), point2, point2.copy(y = point1.y)))
 }
