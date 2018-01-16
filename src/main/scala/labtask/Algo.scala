@@ -141,7 +141,7 @@ class Algo(val field: Field, val barriers: List[Figure], val globalFrom: Point, 
 
 }
 
-case class Interception(interceptedPath: MyVector, barrier: Figure, interceptionPoint: Point)
+
 
 object Algo {
   type Result = List[MyVector]
