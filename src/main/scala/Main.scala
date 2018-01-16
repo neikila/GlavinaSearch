@@ -49,23 +49,6 @@ object Main extends GeometrySupport with TaskParser {
   }
 
   private def toPoints(vectors: List[MyVector]): List[Point] = vectors.head.from :: vectors.map(_.to)
-
-  private def findInterception(v: MyVector, barriers: List[Figure]): Option[Interception] = {
-    def distToStart(point: Point): Double = MyVector(v.from, point).length2
-
-    barriers.flatMap { b =>
-      val iterable: Iterable[Point] = b.findCrossings(v)
-      if (iterable.isEmpty) None
-      else Some(Interception(v, b, iterable.minBy(distToStart)))
-    } match {
-      case Nil => None
-      case interceptions => Some(interceptions.minBy { case Interception(_, _, p) => distToStart(p) })
-    }
-  }
-
-  private def makePath(points: List[Point]): List[MyVector] = {
-    (points zip points.tail).map { case (p1, p2) => MyVector(p1, p2) }
-  }
 }
 
 
