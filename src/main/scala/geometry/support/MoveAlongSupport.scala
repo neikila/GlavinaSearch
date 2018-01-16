@@ -35,10 +35,13 @@ trait MoveAlongSupport extends FigureInterceptSupport {
 
     private def cutPath(path: List[MyVector], otherBarriers: List[Figure]): List[MyVector] = {
       path.toStream
-        .map { vector => vector -> vector.findInterception(otherBarriers) }
+        .map { vector => vector -> vector.bounded.findInterception(otherBarriers) }
         .span { case (_, optInterception) => optInterception.isEmpty } match {
         case (noInterception, (lastPart, Some(interception)) #:: _) =>
-          noInterception.map { case (v, _) => v }.toList :+ MyVector(lastPart.from, interception.interceptionPoint)
+          val okPart = noInterception.map { case (v, _) => v }.toList
+          val last = MyVector(lastPart.from, interception.interceptionPoint)
+          if (last.isZeroVector) okPart
+          else okPart :+ last
         case (noInterception, _) => noInterception.map { case (v, _) => v }.toList
       }
     }

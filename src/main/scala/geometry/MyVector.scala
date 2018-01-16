@@ -42,6 +42,7 @@ case class MyVector(from: Point, to: Point) extends ParametrizedLineSupport {
 
   // Transformations
   def nonBounded: MyVector = new NotBoundedMyVector(from, to)
+  def bounded: MyVector = MyVector(from, to)
   def asRadiusPoint: Point = Point(x, y)
   def parametrized: ParametrizedLine = new ParametrizedLine(this)
   def splitBy(point: Point): (MyVector, MyVector) = (MyVector(from, point), MyVector(point, to))
